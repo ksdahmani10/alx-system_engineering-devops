@@ -1,16 +1,17 @@
 #!/usr/bin/env bash
-# Installs nginx web server
+# Make to /redirect_me is redirecting to another page.
 
 apt-get update
 apt-get install -y nginx
-echo "Holberton School" > /etc/nginx/html/index.html
-echo "server {
-    listen 80;
-    listen [::]:80 default_server;
-    root   /etc/nginx/html;
-    index  index.html;
-    location /redirect_me {
-        return 301 https://twitter.com/kawtara91;
-    }
-}" > /etc/nginx/sites-available/default
+
+# Create default page
+echo "Holberton School" > /var/www/html/index.html
+
+# Configurate server
+ufw allow 'Nginx HTTP'
+
+# Add redirection
+new_site="https://github.com/"
+sed -i "/listen 80 default_server/a rewrite ^/redirect_me $new_site permanent;" /etc/nginx/sites-available/default
+
 service nginx restart
